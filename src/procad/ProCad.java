@@ -4,7 +4,7 @@
  */
 package procad;
 
-import procad.Data.Data;
+import procad.Data.DataModel;
 
 /**
  *
