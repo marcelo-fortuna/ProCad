@@ -1,2 +1,2 @@
 # ProCad
-A Java project created to register products with JDBC.
+A Java project created to register products using JDBC.
