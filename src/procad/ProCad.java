@@ -28,21 +28,208 @@ public class ProCad extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        lblCod = new javax.swing.JLabel();
+        txtCod = new javax.swing.JTextField();
+        lblStatus = new javax.swing.JLabel();
+        cmbStatus = new javax.swing.JComboBox<>();
+        lblRegisterDate = new javax.swing.JLabel();
+        fmtRegisterDate = new javax.swing.JFormattedTextField();
+        lblProductName = new javax.swing.JLabel();
+        txtProductName = new javax.swing.JTextField();
+        lblStockQuantity = new javax.swing.JLabel();
+        txtStockQuantity = new javax.swing.JTextField();
+        lblDescription = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txaDescription = new javax.swing.JTextArea();
+        lblMinStock = new javax.swing.JLabel();
+        spiMinStock = new javax.swing.JSpinner();
+        lblMaxStock = new javax.swing.JLabel();
+        spiMaxStock = new javax.swing.JSpinner();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ProCad | Cadastro de Produtos");
+        setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        setMaximumSize(new java.awt.Dimension(600, 600));
+        setMinimumSize(new java.awt.Dimension(600, 600));
+        setName("frmProCad"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(600, 600));
+        setSize(new java.awt.Dimension(0, 0));
+
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("ProCad | Cadastro de Produtos");
+        lblTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        lblCod.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCod.setText("Código");
+
+        txtCod.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtCod.setToolTipText("Informe o código do produto.");
+        txtCod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodActionPerformed(evt);
+            }
+        });
+
+        lblStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblStatus.setText("Status");
+
+        cmbStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cmbStatus.setMaximumRowCount(2);
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo" }));
+        cmbStatus.setToolTipText("Selecione o status do produto.");
+        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStatusActionPerformed(evt);
+            }
+        });
+
+        lblRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblRegisterDate.setText("Data de cadastro");
+
+        fmtRegisterDate.setText("00/00/0000");
+        fmtRegisterDate.setToolTipText("Data em que o produto foi cadastrado.");
+        fmtRegisterDate.setActionCommand("<Not Set>");
+        fmtRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        lblProductName.setText("Nome");
+
+        txtProductName.setToolTipText("Informe o nome do produto.");
+
+        lblStockQuantity.setText("Quantidade em estoque");
+
+        txtStockQuantity.setToolTipText("Informe a quantidade disponível no estoque do produto cadastrado.");
+        txtStockQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStockQuantityActionPerformed(evt);
+            }
+        });
+
+        lblDescription.setText("Descrição");
+
+        txaDescription.setColumns(20);
+        txaDescription.setLineWrap(true);
+        txaDescription.setRows(3);
+        txaDescription.setTabSize(3);
+        txaDescription.setToolTipText("Uma breve descrição do produto");
+        txaDescription.setAutoscrolls(false);
+        txaDescription.setMaximumSize(new java.awt.Dimension(220, 80));
+        txaDescription.setMinimumSize(new java.awt.Dimension(220, 80));
+        jScrollPane1.setViewportView(txaDescription);
+
+        lblMinStock.setText("Estoque minímo");
+
+        lblMaxStock.setText("Estoque máximo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 478, Short.MAX_VALUE)
+            .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDescription)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtCod)
+                                    .addComponent(lblCod, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbStatus, 0, 160, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fmtRegisterDate)
+                                    .addComponent(lblRegisterDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblStockQuantity)
+                                    .addComponent(txtStockQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(186, 186, 186))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblMinStock, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(spiMinStock))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spiMaxStock)
+                            .addComponent(lblMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 427, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCod)
+                    .addComponent(lblStatus)
+                    .addComponent(lblRegisterDate))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCod)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fmtRegisterDate, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblProductName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblStockQuantity)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtStockQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(136, 136, 136)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spiMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spiMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(285, 285, 285))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblDescription)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblMinStock)
+                            .addComponent(lblMaxStock))
+                        .addGap(315, 315, 315))))
         );
 
+        getAccessibleContext().setAccessibleName("frmProCad");
+
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCodActionPerformed
+
+    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbStatusActionPerformed
+
+    private void txtStockQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockQuantityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockQuantityActionPerformed
 
     /**
      * @param args the command line arguments
@@ -77,5 +264,23 @@ public class ProCad extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cmbStatus;
+    private javax.swing.JFormattedTextField fmtRegisterDate;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCod;
+    private javax.swing.JLabel lblDescription;
+    private javax.swing.JLabel lblMaxStock;
+    private javax.swing.JLabel lblMinStock;
+    private javax.swing.JLabel lblProductName;
+    private javax.swing.JLabel lblRegisterDate;
+    private javax.swing.JLabel lblStatus;
+    private javax.swing.JLabel lblStockQuantity;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JSpinner spiMaxStock;
+    private javax.swing.JSpinner spiMinStock;
+    private javax.swing.JTextArea txaDescription;
+    private javax.swing.JTextField txtCod;
+    private javax.swing.JTextField txtProductName;
+    private javax.swing.JTextField txtStockQuantity;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 public class DataModel {
     
-    private Connection cn = null;
+    private Connection cn;
     
     private String dbconnection;
     private String username;
