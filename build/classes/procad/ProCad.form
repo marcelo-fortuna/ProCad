@@ -47,9 +47,9 @@
           <Component id="lblTitle" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="pnlInput" min="-2" pref="502" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnlButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+              <EmptySpace pref="22" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -59,12 +59,12 @@
               <Component id="lblTitle" min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
-                      <Component id="pnlButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnlInput" min="-2" pref="491" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                      <Component id="pnlButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="194" max="-2" attributes="0"/>
@@ -425,13 +425,13 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="btnNew" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="btnChange" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="btnDelete" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="btnClear" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="btnShow" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="bntExit" min="-2" pref="166" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btnNew" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
+                      <Component id="bntExit" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
+                      <Component id="btnChange" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
+                      <Component id="btnShow" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
+                      <Component id="btnClear" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
+                      <Component id="btnDelete" linkSize="1" alignment="2" min="-2" pref="166" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -439,20 +439,20 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btnNew" min="-2" pref="42" max="-2" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                  <Component id="btnNew" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnChange" min="-2" pref="42" max="-2" attributes="0"/>
+                  <Component id="btnChange" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnDelete" min="-2" pref="42" max="-2" attributes="0"/>
+                  <Component id="btnDelete" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnClear" min="-2" pref="42" max="-2" attributes="0"/>
+                  <Component id="btnClear" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnShow" min="-2" pref="42" max="-2" attributes="0"/>
+                  <Component id="btnShow" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="bntExit" min="-2" pref="42" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="bntExit" linkSize="2" min="-2" pref="42" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -472,11 +472,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Sair"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bntExitActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnClear">
           <Properties>
             <Property name="text" type="java.lang.String" value="Limpar"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnShow">
           <Properties>
