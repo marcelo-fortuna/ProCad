@@ -4,6 +4,8 @@
  */
 package procad;
 
+import procad.Data.DataModel;
+
 /**
  *
  * @author Marcelo
@@ -357,7 +359,7 @@ public class ProCad extends javax.swing.JFrame {
                 .addComponent(pnlInput, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(22, 22, 22))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -416,9 +418,9 @@ public class ProCad extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         
-        ProCadController pccontroller = new ProCadController();
-        
-        pccontroller.clear();
+        DataModel data = new DataModel();
+
+        data.connect();
         
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
