@@ -68,7 +68,7 @@ public class DataModel {
         try {
             cn.close();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Erro ao tentar se desconectar do banco de dados.\nContate o desenvolvedor...\n" + "Mensagem: " + e.getMessage());
+            System.out.println("Erro ao tentar se desconectar do banco de dados.\n" + "Mensagem: " + e.getMessage());
         }
     }
 }
