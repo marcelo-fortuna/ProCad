@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package procad;
 
 import procad.Data.DataModel;
@@ -11,12 +7,15 @@ import procad.Data.DataModel;
  * @author Marcelo
  */
 public class ProCad extends javax.swing.JFrame {
+
+    ProCadController procadcontroller = new ProCadController();
     
     /**
      * Creates new form ProCad
      */
     public ProCad() {
         initComponents();
+        procadcontroller.dateFormatter();
     }
 
     /**
@@ -86,11 +85,6 @@ public class ProCad extends javax.swing.JFrame {
 
         txtCod.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtCod.setToolTipText("Informe o código do produto.");
-        txtCod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCodActionPerformed(evt);
-            }
-        });
 
         lblStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblStatus.setText("Status");
@@ -99,11 +93,6 @@ public class ProCad extends javax.swing.JFrame {
         cmbStatus.setMaximumRowCount(2);
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo" }));
         cmbStatus.setToolTipText("Selecione o status do produto.");
-        cmbStatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbStatusActionPerformed(evt);
-            }
-        });
 
         lblRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblRegisterDate.setText("Data de cadastro");
@@ -120,11 +109,6 @@ public class ProCad extends javax.swing.JFrame {
         lblStockQuantity.setText("Quantidade em estoque");
 
         txtStockQuantity.setToolTipText("Informe a quantidade disponível no estoque do produto cadastrado.");
-        txtStockQuantity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtStockQuantityActionPerformed(evt);
-            }
-        });
 
         lblDescription.setText("Descrição");
 
@@ -142,31 +126,13 @@ public class ProCad extends javax.swing.JFrame {
 
         lblBuyPrice.setText("Preço de compra");
 
-        fmtBuyPrice.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fmtBuyPriceActionPerformed(evt);
-            }
-        });
-
         lblSellPrice.setText("Preço de venda");
 
         lblProfitFactor.setText("Fator lucro");
 
-        txtProfitFactor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtProfitFactorActionPerformed(evt);
-            }
-        });
-
         lblNCM.setText("NCM");
 
         lblBarCode.setText("Código de Barras GTIN / EAN");
-
-        fmtBarCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fmtBarCodeActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
         pnlInput.setLayout(pnlInputLayout);
@@ -381,43 +347,18 @@ public class ProCad extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtStockQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockQuantityActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtStockQuantityActionPerformed
-
-    private void cmbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStatusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbStatusActionPerformed
-
-    private void txtCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCodActionPerformed
-
-    private void fmtBuyPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fmtBuyPriceActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fmtBuyPriceActionPerformed
-
-    private void txtProfitFactorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProfitFactorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtProfitFactorActionPerformed
-
-    private void fmtBarCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fmtBarCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fmtBarCodeActionPerformed
-
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         this.dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        
+        procadcontroller.clear();
     }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
         DataModel data = new DataModel();
 
         data.connect();
@@ -453,11 +394,11 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnShow;
     private javax.swing.JComboBox<String> cmbStatus;
-    private javax.swing.JFormattedTextField fmtBarCode;
-    private javax.swing.JFormattedTextField fmtBuyPrice;
-    private javax.swing.JFormattedTextField fmtNCM;
-    private javax.swing.JFormattedTextField fmtRegisterDate;
-    private javax.swing.JFormattedTextField fmtSellPrice;
+    protected javax.swing.JFormattedTextField fmtBarCode;
+    protected javax.swing.JFormattedTextField fmtBuyPrice;
+    protected javax.swing.JFormattedTextField fmtNCM;
+    protected javax.swing.JFormattedTextField fmtRegisterDate;
+    protected javax.swing.JFormattedTextField fmtSellPrice;
     private javax.swing.JLabel lblBarCode;
     private javax.swing.JLabel lblBuyPrice;
     private javax.swing.JLabel lblCod;
@@ -474,12 +415,12 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel pnlButton;
     private javax.swing.JPanel pnlInput;
-    private javax.swing.JSpinner spiMaxStock;
-    private javax.swing.JSpinner spiMinStock;
-    private javax.swing.JTextArea txaDescription;
-    private javax.swing.JTextField txtCod;
-    private javax.swing.JTextField txtProductName;
-    private javax.swing.JFormattedTextField txtProfitFactor;
-    private javax.swing.JTextField txtStockQuantity;
+    protected javax.swing.JSpinner spiMaxStock;
+    protected javax.swing.JSpinner spiMinStock;
+    protected javax.swing.JTextArea txaDescription;
+    protected javax.swing.JTextField txtCod;
+    protected javax.swing.JTextField txtProductName;
+    protected javax.swing.JFormattedTextField txtProfitFactor;
+    protected javax.swing.JTextField txtStockQuantity;
     // End of variables declaration//GEN-END:variables
 }
