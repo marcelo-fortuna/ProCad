@@ -68,7 +68,7 @@ public class DataModel {
         try {
             cn.close();
         } catch (SQLException e) {
-            System.out.println("Erro ao tentar se desconectar do banco de dados.\n" + "Mensagem: " + e.getMessage());
+            System.out.println("Erro ao tentar se desconectar do banco de dados.\nMensagem: " + e.getMessage());
         }
     }
 }

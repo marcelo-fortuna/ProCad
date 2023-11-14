@@ -1,8 +1,6 @@
 package procad;
 
-import java.text.ParseException;
-import javax.swing.JOptionPane;
-import javax.swing.text.MaskFormatter;
+import procad.Util.Utils;
 
 /**
  *
@@ -11,33 +9,32 @@ import javax.swing.text.MaskFormatter;
  */
 public class ProCadController {
     
-    ProCad procad = new ProCad();
-    
-    public void dateFormatter() {
+   private final ProCad procad; // its final because grants the reference to ProCad don't be change in another locale of the cod.
 
-        try {
-            MaskFormatter mask = new MaskFormatter("##/##/####");
-            mask.install(procad.fmtRegisterDate);
-        } catch (ParseException ex) {
-            JOptionPane.showConfirmDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO" ,JOptionPane.ERROR_MESSAGE);
-        }
+   /**
+    * Contructor that receives a instance of Procad.
+    * @param procad 
+    */
+    public ProCadController(ProCad procad) {
+        this.procad = procad;
+    }
+    
+    /**
+     * Method to format date in fmtRegisterDate.
+     */
+    public void dateFormatter() {
+        Utils.dateFieldFormatter(procad.fmtRegisterDate);
+    }
+    
+    public void priceFormatter() {
+        Utils.priceFieldFormatter(procad.fmtBuyPrice);
+        Utils.priceFieldFormatter(procad.fmtSellPrice);
     }
     
     public void clear() {
-        procad.txtCod.setText("");
-        procad.txtProductName.setText("");;
-        procad.txtStockQuantity.setText("");
-        procad.txtProfitFactor.setText("");
-        
-        procad.fmtRegisterDate.setText("");
-        procad.fmtBuyPrice.setText("");
-        procad.fmtSellPrice.setText("");
-        procad.fmtNCM.setText("");
-        procad.fmtBarCode.setText("");
-        
-        procad.txaDescription.setText("");
-        
-        procad.spiMinStock.setValue(0);
-        procad.spiMaxStock.setValue(0);
+        Utils.clearField(procad.txtCod, procad.txtProductName, procad.txtStockQuantity, procad.txtProfitFactor);
+        Utils.clearField(procad.fmtRegisterDate, procad.fmtBuyPrice, procad.fmtSellPrice, procad.fmtNCM, procad.fmtBarCode);
+        Utils.clearField(procad.txaDescription);
+        Utils.clearField(procad.spiMinStock, procad.spiMaxStock);
     }
 }

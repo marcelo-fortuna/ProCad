@@ -8,14 +8,16 @@ import procad.Data.DataModel;
  */
 public class ProCad extends javax.swing.JFrame {
 
-    ProCadController procadcontroller = new ProCadController();
+    private final ProCadController procadcontroller;
     
     /**
      * Creates new form ProCad
      */
     public ProCad() {
         initComponents();
+        procadcontroller = new ProCadController(this);
         procadcontroller.dateFormatter();
+        procadcontroller.priceFormatter();
     }
 
     /**
@@ -97,7 +99,6 @@ public class ProCad extends javax.swing.JFrame {
         lblRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblRegisterDate.setText("Data de cadastro");
 
-        fmtRegisterDate.setText("00/00/0000");
         fmtRegisterDate.setToolTipText("Data em que o produto foi cadastrado.");
         fmtRegisterDate.setActionCommand("<Not Set>");
         fmtRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
