@@ -20,17 +20,23 @@ public class ProCadController {
     }
     
     /**
-     * Method to format date in fmtRegisterDate.
+     * Method to format a date field specified.
      */
     public void dateFormatter() {
         Utils.dateFieldFormatter(procad.fmtRegisterDate);
     }
     
+     /**
+     * Method to format a price field specified.
+     */
     public void priceFormatter() {
         Utils.priceFieldFormatter(procad.fmtBuyPrice);
         Utils.priceFieldFormatter(procad.fmtSellPrice);
     }
     
+    /**
+     * Method to clear the value of specified fields.
+     */
     public void clear() {
         Utils.clearField(procad.txtCod, procad.txtProductName, procad.txtStockQuantity, procad.txtProfitFactor);
         Utils.clearField(procad.fmtRegisterDate, procad.fmtBuyPrice, procad.fmtSellPrice, procad.fmtNCM, procad.fmtBarCode);

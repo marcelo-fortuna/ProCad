@@ -409,6 +409,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtProfitFactor">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
           </AuxValues>
