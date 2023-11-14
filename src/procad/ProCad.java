@@ -135,6 +135,8 @@ public class ProCad extends javax.swing.JFrame {
 
         lblProfitFactor.setText("Fator lucro");
 
+        txtProfitFactor.setEditable(false);
+
         lblNCM.setText("NCM");
 
         lblBarCode.setText("Código de Barras GTIN / EAN");
