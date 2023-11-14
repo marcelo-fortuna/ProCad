@@ -19,7 +19,7 @@ public class ProCadController {
             MaskFormatter mask = new MaskFormatter("##/##/####");
             mask.install(procad.fmtRegisterDate);
         } catch (ParseException ex) {
-            JOptionPane.showConfirmDialog(null, "Erro ao formatar campo de texto.", "Mensagem de erro" ,JOptionPane.ERROR);
+            JOptionPane.showConfirmDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO" ,JOptionPane.ERROR_MESSAGE);
         }
     }
     
