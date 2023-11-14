@@ -360,7 +360,7 @@ public class ProCad extends javax.swing.JFrame {
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
         
         if(option == JOptionPane.OK_OPTION)
             procadcontroller.clear();
