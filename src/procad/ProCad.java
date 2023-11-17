@@ -2,6 +2,7 @@ package procad;
 
 import javax.swing.JOptionPane;
 import procad.Data.DataModel;
+import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 
 /**
  *
@@ -15,13 +16,19 @@ public class ProCad extends javax.swing.JFrame {
      * Creates new form ProCad
      */
     public ProCad() {
+        UIManagerConfiguration.setLanguageConfiguration();
+
         DataModel data = new DataModel();
         
         data.connect();
+        
         initComponents();
+        
         procadcontroller = new ProCadController(this);
-        procadcontroller.dateFormatter();
-        procadcontroller.priceFormatter();
+        
+        ProCadController.setDateFieldFormatter(fmtRegisterDate);
+        procadcontroller.setTodayDate(fmtRegisterDate);
+        ProCadController.setPriceFieldFormatter(fmtSellPrice, fmtBuyPrice);
     }
 
     /**
@@ -355,25 +362,22 @@ public class ProCad extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a encerrar o programa, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a encerrar o programa, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
          
-        if(option == JOptionPane.OK_OPTION)
-            this.dispose();
+        if(option == JOptionPane.OK_OPTION) this.dispose();
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         
-        if(option == JOptionPane.OK_OPTION)
-            procadcontroller.clear();
+        if(option == JOptionPane.OK_OPTION) procadcontroller.clearFields();
     }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-        
+
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

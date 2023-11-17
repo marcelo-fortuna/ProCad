@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 
 /**
  *
@@ -53,6 +54,8 @@ public class DataModel {
      * Method to stabilish the connection with the database.
      */
     public void connect() {
+        UIManagerConfiguration.setLanguageConfiguration();
+        
         try {
             cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.database, this.username, this.password);
         } catch (SQLException e) {
@@ -66,6 +69,8 @@ public class DataModel {
      * Method to close the connection with the database.
      */
     public void disconnect() {
+        UIManagerConfiguration.setLanguageConfiguration();
+        
         try {
             cn.close();
         } catch (SQLException e) {

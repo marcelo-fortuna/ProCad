@@ -1,8 +1,8 @@
 package procad.Util;
 
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
-import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class created to make access to utilitties more easy.
@@ -11,29 +11,15 @@ import java.text.ParseException;
  */
 public class Utils {
     
-    private static MaskFormatter maskformatter;
-    
-    public static void dateFieldFormatter(JFormattedTextField dateField) {
-        try {
-            maskformatter = new MaskFormatter("##/##/####");
-            maskformatter.setPlaceholderCharacter('0');
-            maskformatter.install(dateField);
-        } catch (ParseException e) {
-            e.printStackTrace(); // log errors
-            JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    public static void priceFieldFormatter(JFormattedTextField priceField) {
-        try {
-            maskformatter = new MaskFormatter("R$ ####,##");
-            priceField.setColumns(10);
-            maskformatter.setPlaceholderCharacter('0');
-            maskformatter.install(priceField);
-        } catch (ParseException e) {
-            e.printStackTrace(); // log errors
-            JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
-        }
+    /**
+     * Method to return the current date.
+     * @return returns the current date that Brazillians uses.
+     */
+    public static String getTodayDate() {
+        SimpleDateFormat formatDateToBrazillianDate = new SimpleDateFormat("dd/MM/yyyy");
+        Date currentDate = new Date(System.currentTimeMillis());
+        
+        return formatDateToBrazillianDate.format(currentDate);
     }
     
     /**
