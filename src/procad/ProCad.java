@@ -11,6 +11,7 @@ import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 public class ProCad extends javax.swing.JFrame {
 
     private final ProCadController procadcontroller;
+    private final DataModel data = new DataModel();
     
     /**
      * Creates new form ProCad
@@ -18,8 +19,6 @@ public class ProCad extends javax.swing.JFrame {
     public ProCad() {
         UIManagerConfiguration.setLanguageConfiguration();
 
-        DataModel data = new DataModel();
-        
         data.connect();
         
         initComponents();
@@ -364,7 +363,10 @@ public class ProCad extends javax.swing.JFrame {
     private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Você está prestes a encerrar o programa, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
          
-        if(option == JOptionPane.OK_OPTION) this.dispose();
+        if(option == JOptionPane.OK_OPTION) {
+            data.disconnect();
+            this.dispose();
+        }
     }//GEN-LAST:event_bntExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
