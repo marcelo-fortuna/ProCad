@@ -18,7 +18,7 @@ public class ProCad extends javax.swing.JFrame {
      */
     public ProCad() {
         UIManagerConfiguration.setLanguageConfiguration();
-
+        
         data.connect();
         
         initComponents();
@@ -28,6 +28,9 @@ public class ProCad extends javax.swing.JFrame {
         ProCadController.setDateFieldFormatter(fmtRegisterDate);
         procadcontroller.setTodayDate(fmtRegisterDate);
         ProCadController.setPriceFieldFormatter(fmtSellPrice, fmtBuyPrice);
+        ProCadController.setBarCodeFormatter(fmtBarCode);
+        ProCadController.setProfitFactorFormatter(fmtProfitFactor);
+        ProCadController.setNCMFormatter(fmtNCM);
     }
 
     /**
@@ -62,7 +65,7 @@ public class ProCad extends javax.swing.JFrame {
         lblSellPrice = new javax.swing.JLabel();
         fmtSellPrice = new javax.swing.JFormattedTextField();
         lblProfitFactor = new javax.swing.JLabel();
-        txtProfitFactor = new javax.swing.JFormattedTextField();
+        fmtProfitFactor = new javax.swing.JFormattedTextField();
         lblNCM = new javax.swing.JLabel();
         fmtNCM = new javax.swing.JFormattedTextField();
         lblBarCode = new javax.swing.JLabel();
@@ -70,10 +73,17 @@ public class ProCad extends javax.swing.JFrame {
         pnlButton = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnChange = new javax.swing.JButton();
-        bntExit = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         btnShow = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jMenuBar = new javax.swing.JMenuBar();
+        menRegister = new javax.swing.JMenu();
+        mniProduct = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mniExit = new javax.swing.JMenuItem();
+        menInformation = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ProCad | Cadastro de Produtos");
@@ -85,6 +95,7 @@ public class ProCad extends javax.swing.JFrame {
         setResizable(false);
         setSize(new java.awt.Dimension(0, 0));
 
+        lblTitle.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitle.setText("ProCad | Cadastro de Produtos");
         lblTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -92,13 +103,13 @@ public class ProCad extends javax.swing.JFrame {
         pnlInput.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlInput.setPreferredSize(new java.awt.Dimension(492, 302));
 
-        lblCod.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblCod.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblCod.setText("Código");
 
         txtCod.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtCod.setToolTipText("Informe o código do produto.");
 
-        lblStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblStatus.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblStatus.setText("Status");
 
         cmbStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -106,21 +117,24 @@ public class ProCad extends javax.swing.JFrame {
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo" }));
         cmbStatus.setToolTipText("Selecione o status do produto.");
 
-        lblRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblRegisterDate.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblRegisterDate.setText("Data de cadastro");
 
         fmtRegisterDate.setToolTipText("Data em que o produto foi cadastrado.");
         fmtRegisterDate.setActionCommand("<Not Set>");
         fmtRegisterDate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
+        lblProductName.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblProductName.setText("Nome");
 
         txtProductName.setToolTipText("Informe o nome do produto.");
 
+        lblStockQuantity.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblStockQuantity.setText("Quantidade em estoque");
 
         txtStockQuantity.setToolTipText("Informe a quantidade disponível no estoque do produto cadastrado.");
 
+        lblDescription.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblDescription.setText("Descrição");
 
         txaDescription.setColumns(20);
@@ -131,20 +145,27 @@ public class ProCad extends javax.swing.JFrame {
         txaDescription.setMaximumSize(new java.awt.Dimension(220, 80));
         txaDescription.setMinimumSize(new java.awt.Dimension(220, 80));
 
+        lblMinStock.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblMinStock.setText("Estoque minímo");
 
+        lblMaxStock.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblMaxStock.setText("Estoque máximo");
 
+        lblBuyPrice.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblBuyPrice.setText("Preço de compra");
 
+        lblSellPrice.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblSellPrice.setText("Preço de venda");
 
+        lblProfitFactor.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblProfitFactor.setText("Fator lucro");
 
-        txtProfitFactor.setEditable(false);
+        fmtProfitFactor.setEditable(false);
 
+        lblNCM.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblNCM.setText("NCM");
 
+        lblBarCode.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblBarCode.setText("Código de Barras GTIN / EAN");
 
         javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
@@ -206,7 +227,7 @@ public class ProCad extends javax.swing.JFrame {
                             .addComponent(fmtBarCode)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createSequentialGroup()
                                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtProfitFactor, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(fmtProfitFactor, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblProfitFactor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -260,7 +281,7 @@ public class ProCad extends javax.swing.JFrame {
                     .addComponent(lblNCM))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtProfitFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fmtProfitFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fmtNCM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(lblBarCode)
@@ -273,10 +294,10 @@ public class ProCad extends javax.swing.JFrame {
 
         btnChange.setText("Alterar");
 
-        bntExit.setText("Sair");
-        bntExit.addActionListener(new java.awt.event.ActionListener() {
+        btnExit.setText("Sair");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bntExitActionPerformed(evt);
+                btnExitActionPerformed(evt);
             }
         });
 
@@ -299,7 +320,7 @@ public class ProCad extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -307,7 +328,7 @@ public class ProCad extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnlButtonLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {bntExit, btnChange, btnClear, btnDelete, btnNew, btnShow});
+        pnlButtonLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnShow});
 
         pnlButtonLayout.setVerticalGroup(
             pnlButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,11 +344,54 @@ public class ProCad extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(bntExit, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
 
-        pnlButtonLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {bntExit, btnChange, btnClear, btnDelete, btnNew, btnShow});
+        pnlButtonLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnShow});
+
+        menRegister.setText("Cadastro");
+
+        mniProduct.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniProduct.setText("Produto");
+        mniProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniProductActionPerformed(evt);
+            }
+        });
+        menRegister.add(mniProduct);
+        menRegister.add(jSeparator1);
+
+        mniExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniExit.setText("Sair");
+        mniExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniExitActionPerformed(evt);
+            }
+        });
+        menRegister.add(mniExit);
+
+        jMenuBar.add(menRegister);
+
+        menInformation.setText("Informações");
+        menInformation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menInformationActionPerformed(evt);
+            }
+        });
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuItem1.setText("Sobre");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menInformation.add(jMenuItem1);
+
+        jMenuBar.add(menInformation);
+
+        setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -360,20 +424,36 @@ public class ProCad extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bntExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntExitActionPerformed
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Você está prestes a encerrar o programa, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
          
         if(option == JOptionPane.OK_OPTION) {
             data.disconnect();
             this.dispose();
         }
-    }//GEN-LAST:event_bntExitActionPerformed
+    }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         
         if(option == JOptionPane.OK_OPTION) procadcontroller.clearFields();
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void mniExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniExitActionPerformed
+        btnExitActionPerformed(evt);
+    }//GEN-LAST:event_mniExitActionPerformed
+
+    private void mniProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniProductActionPerformed
+        
+    }//GEN-LAST:event_mniProductActionPerformed
+
+    private void menInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menInformationActionPerformed
+        
+    }//GEN-LAST:event_menInformationActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new About().setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,18 +484,22 @@ public class ProCad extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bntExit;
     private javax.swing.JButton btnChange;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnShow;
     private javax.swing.JComboBox<String> cmbStatus;
     protected javax.swing.JFormattedTextField fmtBarCode;
     protected javax.swing.JFormattedTextField fmtBuyPrice;
     protected javax.swing.JFormattedTextField fmtNCM;
+    protected javax.swing.JFormattedTextField fmtProfitFactor;
     protected javax.swing.JFormattedTextField fmtRegisterDate;
     protected javax.swing.JFormattedTextField fmtSellPrice;
+    private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel lblBarCode;
     private javax.swing.JLabel lblBuyPrice;
     private javax.swing.JLabel lblCod;
@@ -430,6 +514,10 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblStockQuantity;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JMenu menInformation;
+    private javax.swing.JMenu menRegister;
+    private javax.swing.JMenuItem mniExit;
+    private javax.swing.JMenuItem mniProduct;
     private javax.swing.JPanel pnlButton;
     private javax.swing.JPanel pnlInput;
     protected javax.swing.JSpinner spiMaxStock;
@@ -437,7 +525,6 @@ public class ProCad extends javax.swing.JFrame {
     protected javax.swing.JTextArea txaDescription;
     protected javax.swing.JTextField txtCod;
     protected javax.swing.JTextField txtProductName;
-    protected javax.swing.JFormattedTextField txtProfitFactor;
     protected javax.swing.JTextField txtStockQuantity;
     // End of variables declaration//GEN-END:variables
 }

@@ -75,10 +75,54 @@ public class ProCadController {
     }
     
     /**
+     * Method to define the format of the EAN bar code field inserted by the user in a JFormattedTextField.
+     * @param barCodeField 
+     */
+    public static void setBarCodeFormatter(JFormattedTextField barCodeField) {
+        UIManagerConfiguration.setLanguageConfiguration();
+      
+         try {
+                maskformatter = new MaskFormatter("#############");
+                maskformatter.setPlaceholderCharacter('0');
+                maskformatter.install(barCodeField);
+         } catch (ParseException e) {
+                System.err.println("Erro ao formatar componente: " + barCodeField + "\nMensagem de erro: " + e);
+                JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
+         }
+    }
+    
+    public static void setNCMFormatter(JFormattedTextField ncmField) {
+        UIManagerConfiguration.setLanguageConfiguration();
+      
+         try {
+                maskformatter = new MaskFormatter("########");
+                maskformatter.setPlaceholderCharacter('0');
+                maskformatter.install(ncmField);
+         } catch (ParseException e) {
+                System.err.println("Erro ao formatar componente: " + ncmField + "\nMensagem de erro: " + e);
+                JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
+         }
+    }
+    
+    
+    public static void setProfitFactorFormatter(JFormattedTextField profitFactorField) {
+        UIManagerConfiguration.setLanguageConfiguration();
+      
+         try {
+                maskformatter = new MaskFormatter("% ##,##");
+                maskformatter.setPlaceholderCharacter('0');
+                maskformatter.install(profitFactorField);
+         } catch (ParseException e) {
+                System.err.println("Erro ao formatar componente: " + profitFactorField + "\nMensagem de erro: " + e);
+                JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
+         }
+    }
+    
+    /**
      * Method to clear the value of specified fields.
      */
     public void clearFields() {
-        Utils.clearField(procad.txtCod, procad.txtProductName, procad.txtStockQuantity, procad.txtProfitFactor);
+        Utils.clearField(procad.txtCod, procad.txtProductName, procad.txtStockQuantity, procad.fmtProfitFactor);
         Utils.clearField(procad.fmtRegisterDate, procad.fmtBuyPrice, procad.fmtSellPrice, procad.fmtNCM, procad.fmtBarCode);
         Utils.clearField(procad.txaDescription);
         Utils.clearField(procad.spiMinStock, procad.spiMaxStock);
