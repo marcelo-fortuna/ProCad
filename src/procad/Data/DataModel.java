@@ -16,8 +16,8 @@ public class DataModel {
     private Connection cn;
     
     private String database = "ProCad";
-    private String username;
-    private String password;
+    private String username = "root";
+    private String password = "root";
     
     /**
      * Method to set username of the connection with the database

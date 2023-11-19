@@ -1,7 +1,11 @@
 package procad;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import procad.Data.DataModel;
+import procad.Product.ProductController;
 import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 
 /**
@@ -10,6 +14,7 @@ import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
  */
 public class ProCad extends javax.swing.JFrame {
 
+    private final ProductController productcontroller = null;
     private final ProCadController procadcontroller;
     private final DataModel data = new DataModel();
     
@@ -18,7 +23,7 @@ public class ProCad extends javax.swing.JFrame {
      */
     public ProCad() {
         UIManagerConfiguration.setLanguageConfiguration();
-        
+
         data.connect();
         
         initComponents();
@@ -83,7 +88,7 @@ public class ProCad extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mniExit = new javax.swing.JMenuItem();
         menInformation = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mniAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ProCad | Cadastro de Produtos");
@@ -291,6 +296,11 @@ public class ProCad extends javax.swing.JFrame {
         );
 
         btnNew.setText("Novo");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
         btnChange.setText("Alterar");
 
@@ -354,11 +364,6 @@ public class ProCad extends javax.swing.JFrame {
 
         mniProduct.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         mniProduct.setText("Produto");
-        mniProduct.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniProductActionPerformed(evt);
-            }
-        });
         menRegister.add(mniProduct);
         menRegister.add(jSeparator1);
 
@@ -374,20 +379,15 @@ public class ProCad extends javax.swing.JFrame {
         jMenuBar.add(menRegister);
 
         menInformation.setText("Informações");
-        menInformation.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menInformationActionPerformed(evt);
-            }
-        });
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setText("Sobre");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mniAbout.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        mniAbout.setText("Sobre");
+        mniAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mniAboutActionPerformed(evt);
             }
         });
-        menInformation.add(jMenuItem1);
+        menInformation.add(mniAbout);
 
         jMenuBar.add(menInformation);
 
@@ -436,24 +436,29 @@ public class ProCad extends javax.swing.JFrame {
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Você está prestes a limpar todos os dados inseridos, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         
-        if(option == JOptionPane.OK_OPTION) procadcontroller.clearFields();
+        if(option == JOptionPane.OK_OPTION) {
+            procadcontroller.clearFields();
+            procadcontroller.setTodayDate(fmtRegisterDate);
+        }
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void mniExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniExitActionPerformed
         btnExitActionPerformed(evt);
     }//GEN-LAST:event_mniExitActionPerformed
 
-    private void mniProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniProductActionPerformed
-        
-    }//GEN-LAST:event_mniProductActionPerformed
+    private void mniAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAboutActionPerformed
+        About about = new About();
+        about.setLocationRelativeTo(this);
+        about.setVisible(true);
+    }//GEN-LAST:event_mniAboutActionPerformed
 
-    private void menInformationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menInformationActionPerformed
-        
-    }//GEN-LAST:event_menInformationActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        new About().setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+//        try {
+//            productcontroller.insertData(txtCod.getText());
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProCad.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    }//GEN-LAST:event_btnNewActionPerformed
 
     /**
      * @param args the command line arguments
@@ -476,10 +481,8 @@ public class ProCad extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ProCad().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ProCad().setVisible(true);
         });
     }
 
@@ -498,7 +501,6 @@ public class ProCad extends javax.swing.JFrame {
     protected javax.swing.JFormattedTextField fmtRegisterDate;
     protected javax.swing.JFormattedTextField fmtSellPrice;
     private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel lblBarCode;
     private javax.swing.JLabel lblBuyPrice;
@@ -516,6 +518,7 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JMenu menInformation;
     private javax.swing.JMenu menRegister;
+    private javax.swing.JMenuItem mniAbout;
     private javax.swing.JMenuItem mniExit;
     private javax.swing.JMenuItem mniProduct;
     private javax.swing.JPanel pnlButton;

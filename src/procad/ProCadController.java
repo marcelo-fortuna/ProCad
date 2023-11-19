@@ -6,6 +6,8 @@ import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 import procad.Util.Utils;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  *
@@ -16,6 +18,7 @@ public class ProCadController {
     
    private final ProCad procad; // its final because grants the reference to ProCad don't be change in another locale of the code.
    private static MaskFormatter maskformatter;
+   private PreparedStatement pst;
    
    /**
     * Contructor that receives a instance of Procad.
