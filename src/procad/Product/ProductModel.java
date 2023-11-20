@@ -11,7 +11,7 @@ public class ProductModel {
     private String ProductCod;
     private String ProductName;
     private String ProductDesc;
-    private String ProductStatus;
+    private char ProductStatus;
     private float ProductSellPrice;
     private float ProductBuyPrice;
     private int ProductStockQuantity;
@@ -20,7 +20,7 @@ public class ProductModel {
     private float ProductProfit;
     private String ProductRegisterDate;
     private String ProductImage;
-    private int ProductBarCode;
+    private String ProductBarCode;
     private int ProductNCM;
 
     public int getProductId() {
@@ -55,12 +55,12 @@ public class ProductModel {
         this.ProductDesc = ProductDesc;
     }
 
-    public String getProductStatus() {
+    public char getProductStatus() {
         return ProductStatus;
     }
 
-    public void setProductStatus(String PProductStatus) {
-        this.ProductStatus = PProductStatus;
+    public void setProductStatus(char ProductStatus) {
+        this.ProductStatus = ProductStatus;
     }
 
     public float getProductSellPrice() {
@@ -127,11 +127,11 @@ public class ProductModel {
         this.ProductImage = ProductImage;
     }
 
-    public int getProductBarCode() {
+    public String getProductBarCode() {
         return ProductBarCode;
     }
 
-    public void setProductBarCode(int ProductBarCode) {
+    public void setProductBarCode(String ProductBarCode) {
         this.ProductBarCode = ProductBarCode;
     }
 

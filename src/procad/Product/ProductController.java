@@ -22,33 +22,31 @@ public class ProductController {
     private final DataModel data = new DataModel();
 
     public ProductController() {
-        this.data.setPassword("qnq32800");
-        this.data.setUsername("root");
         this.con = this.data.connect();
     }
     
     public void insertProduct(ProductModel product){
         try {
-            String query = "INSERT INTO produto (cod,nome,descricao,status,"
-                    + "preco_venda,preco_compra,qtd_estoque,estoque_minimo,"
-                    + "estoque_maximo,fator,bar_code,ncm,"
-                    + "data_cadastro,imagem) "
-                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+            String query = "INSERT INTO produto (cod,status,nome,descricao,"
+                    + "qtd_estoque,estoque_minimo,estoque_maximo,preco_compra,preco_venda,"
+                    + "bar_code,ncm,fator,"
+                    + "data_cadastro,imagem)"
+                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
         
             pst = con.prepareStatement(query);
             
             pst.setString(1,product.getProductCod());
-            pst.setString(2,product.getProductName());
-            pst.setString(3,product.getProductDesc());
-            pst.setString(4,product.getProductStatus());           
-            pst.setFloat(5,product.getProductSellPrice());
-            pst.setFloat(6,product.getProductBuyPrice());
-            pst.setInt(7,product.getProductStockQuantity());
-            pst.setInt(8,product.getProductMinStockQuantity());
-            pst.setInt(9,product.getProductMaxStockQuantity());
-            pst.setFloat(10,product.getProductProfit());
-            pst.setInt(11,product.getProductBarCode());
-            pst.setInt(12,product.getProductNCM());
+            pst.setString(2,String.valueOf(product.getProductStatus()));   
+            pst.setString(3,product.getProductName());
+            pst.setString(4,product.getProductDesc());
+            pst.setInt(5,product.getProductStockQuantity());
+            pst.setInt(6,product.getProductMinStockQuantity());
+            pst.setInt(7,product.getProductMaxStockQuantity());
+            pst.setFloat(8,product.getProductBuyPrice());
+            pst.setFloat(9,product.getProductSellPrice());
+            pst.setString(10,product.getProductBarCode());
+            pst.setInt(11,product.getProductNCM());
+            pst.setFloat(12,product.getProductProfit());
             pst.setString(13,product.getProductRegisterDate()); 
             pst.setString(14,product.getProductImage());
             
@@ -75,7 +73,7 @@ public class ProductController {
                 ProductModel obj = new ProductModel();
                 obj.setProductCod(rs.getString("cod"));
                 obj.setProductId(rs.getInt("id"));
-                obj.setProductStatus(rs.getString("status"));                
+                obj.setProductStatus(rs.getString("status").charAt(0));                
                 obj.setProductName(rs.getString("nome"));
                 obj.setProductStockQuantity(rs.getInt("qtd_estoque"));
                 obj.setProductMinStockQuantity(rs.getInt("estoque_minimo"));
@@ -84,7 +82,7 @@ public class ProductController {
                 obj.setProductSellPrice(rs.getInt("preco_venda"));
                 obj.setProductProfit(rs.getInt("fator"));
                 obj.setProductDesc(rs.getString("descricao"));                
-                obj.setProductBarCode(rs.getInt("bar_code"));         
+                obj.setProductBarCode(rs.getString("bar_code"));         
                 obj.setProductNCM(rs.getInt("ncm"));                
                                 
                 obj.setProductRegisterDate(rs.getString("data_cadastro")); 
@@ -109,14 +107,14 @@ public class ProductController {
             pst.setString(1,product.getProductCod());
             pst.setString(2,product.getProductName());
             pst.setString(3,product.getProductDesc());
-            pst.setString(4,product.getProductStatus());           
+            pst.setString(4,String.valueOf(product.getProductStatus()));           
             pst.setFloat(5,product.getProductSellPrice());
             pst.setFloat(6,product.getProductBuyPrice());
             pst.setInt(7,product.getProductStockQuantity());
             pst.setInt(8,product.getProductMinStockQuantity());
             pst.setInt(9,product.getProductMaxStockQuantity());
             pst.setFloat(10,product.getProductProfit());
-            pst.setInt(11,product.getProductBarCode());
+            pst.setString(11,product.getProductBarCode());
             pst.setInt(12,product.getProductNCM());
             pst.setString(13,product.getProductRegisterDate()); 
             pst.setString(14,product.getProductImage());

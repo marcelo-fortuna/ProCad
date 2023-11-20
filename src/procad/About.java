@@ -48,6 +48,11 @@ public class About extends javax.swing.JFrame {
         setName("frmAbout"); // NOI18N
         setPreferredSize(new java.awt.Dimension(420, 380));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitle.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -57,7 +62,6 @@ public class About extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
         jLabel1.setText("Sobre o ProCad:");
 
-        jScrollPane1.setBackground(null);
         jScrollPane1.setEnabled(false);
         jScrollPane1.setFocusable(false);
         jScrollPane1.setOpaque(false);
@@ -156,6 +160,10 @@ public class About extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
