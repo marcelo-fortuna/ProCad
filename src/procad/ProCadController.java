@@ -59,25 +59,6 @@ public class ProCadController {
     }
     
     /**
-     * Method to define the format of the BRL price inserted by the user in a JFormattedTextField.
-     * @param priceFields 
-     */
-    public static void setPriceFieldFormatter(JFormattedTextField... priceFields) {
-        UIManagerConfiguration.setLanguageConfiguration();
-        
-        for (JFormattedTextField priceField : priceFields) {
-            try {
-                maskformatter = new MaskFormatter("####,## R$");
-                maskformatter.setPlaceholderCharacter('0');
-                maskformatter.install(priceField);
-            } catch (ParseException e) {
-                System.err.println("Erro ao formatar componente: " + priceField + "\nMensagem de erro: " + e);
-                JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-    
-    /**
      * Method to define the format of the EAN bar code field inserted by the user in a JFormattedTextField.
      * @param barCodeField 
      */
@@ -103,20 +84,6 @@ public class ProCadController {
                 maskformatter.install(ncmField);
          } catch (ParseException e) {
                 System.err.println("Erro ao formatar componente: " + ncmField + "\nMensagem de erro: " + e);
-                JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
-         }
-    }
-    
-    
-    public static void setProfitFactorFormatter(JFormattedTextField profitFactorField) {
-        UIManagerConfiguration.setLanguageConfiguration();
-      
-         try {
-                maskformatter = new MaskFormatter("% ##,##");
-                maskformatter.setPlaceholderCharacter('0');
-                maskformatter.install(profitFactorField);
-         } catch (ParseException e) {
-                System.err.println("Erro ao formatar componente: " + profitFactorField + "\nMensagem de erro: " + e);
                 JOptionPane.showMessageDialog(null, "Erro ao formatar campo de texto.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
          }
     }

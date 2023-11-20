@@ -1,22 +1,38 @@
 package procad;
 
-import java.sql.SQLException;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import procad.Data.DataModel;
+import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import procad.Product.ProductController;
+import procad.Product.ProductModel;
 import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
 
 /**
  *
  * @author Marcelo
+ * @since 07/11/2023
  */
 public class ProCad extends javax.swing.JFrame {
 
-    private final ProductController productcontroller = null;
     private final ProCadController procadcontroller;
-    private final DataModel data = new DataModel();
+    private BufferedImage img;
+    private String imagePath;
+    private Path destination;
+    private File selectedFile;
     
     /**
      * Creates new form ProCad
@@ -24,17 +40,13 @@ public class ProCad extends javax.swing.JFrame {
     public ProCad() {
         UIManagerConfiguration.setLanguageConfiguration();
 
-        data.connect();
-        
         initComponents();
         
         procadcontroller = new ProCadController(this);
         
         ProCadController.setDateFieldFormatter(fmtRegisterDate);
         procadcontroller.setTodayDate(fmtRegisterDate);
-        ProCadController.setPriceFieldFormatter(fmtSellPrice, fmtBuyPrice);
         ProCadController.setBarCodeFormatter(fmtBarCode);
-        ProCadController.setProfitFactorFormatter(fmtProfitFactor);
         ProCadController.setNCMFormatter(fmtNCM);
     }
 
@@ -75,13 +87,19 @@ public class ProCad extends javax.swing.JFrame {
         fmtNCM = new javax.swing.JFormattedTextField();
         lblBarCode = new javax.swing.JLabel();
         fmtBarCode = new javax.swing.JFormattedTextField();
+        lblImage = new javax.swing.JLabel();
+        lblProductImage = new javax.swing.JLabel();
+        btnFileChooser = new javax.swing.JButton();
+        lblFIleChoosed = new javax.swing.JLabel();
         pnlButton = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnChange = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        btnShow = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblProducts = new javax.swing.JTable();
         jMenuBar = new javax.swing.JMenuBar();
         menRegister = new javax.swing.JMenu();
         mniProduct = new javax.swing.JMenuItem();
@@ -93,12 +111,17 @@ public class ProCad extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("ProCad | Cadastro de Produtos");
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        setMaximumSize(new java.awt.Dimension(720, 720));
-        setMinimumSize(new java.awt.Dimension(720, 720));
+        setMaximumSize(new java.awt.Dimension(752, 774));
+        setMinimumSize(new java.awt.Dimension(752, 774));
         setName("frmProCad"); // NOI18N
         setPreferredSize(new java.awt.Dimension(720, 720));
         setResizable(false);
         setSize(new java.awt.Dimension(0, 0));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         lblTitle.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -119,8 +142,8 @@ public class ProCad extends javax.swing.JFrame {
 
         cmbStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         cmbStatus.setMaximumRowCount(2);
-        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo" }));
-        cmbStatus.setToolTipText("Selecione o status do produto.");
+        cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I", "A" }));
+        cmbStatus.setToolTipText("Selecione o status do produto.\nI = Inativo.\nA = Ativo.");
 
         lblRegisterDate.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblRegisterDate.setText("Data de cadastro");
@@ -159,19 +182,51 @@ public class ProCad extends javax.swing.JFrame {
         lblBuyPrice.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblBuyPrice.setText("Preço de compra");
 
+        fmtBuyPrice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                fmtBuyPriceFocusLost(evt);
+            }
+        });
+
         lblSellPrice.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblSellPrice.setText("Preço de venda");
+
+        fmtSellPrice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                fmtSellPriceFocusGained(evt);
+            }
+        });
 
         lblProfitFactor.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblProfitFactor.setText("Fator lucro");
 
-        fmtProfitFactor.setEditable(false);
+        fmtProfitFactor.setText("00,00 %");
+        fmtProfitFactor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fmtProfitFactorMouseClicked(evt);
+            }
+        });
 
         lblNCM.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblNCM.setText("NCM");
 
         lblBarCode.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lblBarCode.setText("Código de Barras GTIN / EAN");
+
+        lblImage.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblImage.setText("Imagem do produto");
+
+        lblProductImage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        btnFileChooser.setText("Escolher Arquivo");
+        btnFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFileChooserActionPerformed(evt);
+            }
+        });
+
+        lblFIleChoosed.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+        lblFIleChoosed.setText(" ");
 
         javax.swing.GroupLayout pnlInputLayout = new javax.swing.GroupLayout(pnlInput);
         pnlInput.setLayout(pnlInputLayout);
@@ -180,65 +235,70 @@ public class ProCad extends javax.swing.JFrame {
             .addGroup(pnlInputLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txaDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlInputLayout.createSequentialGroup()
+                        .addComponent(lblDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(301, 301, 301))
+                    .addGroup(pnlInputLayout.createSequentialGroup()
+                        .addComponent(lblMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblImage)
+                        .addGap(41, 41, 41))
+                    .addGroup(pnlInputLayout.createSequentialGroup()
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtCod)
+                            .addComponent(lblCod, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(fmtRegisterDate)
+                            .addComponent(lblRegisterDate, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlInputLayout.createSequentialGroup()
                         .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txaDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(pnlInputLayout.createSequentialGroup()
-                                    .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlInputLayout.createSequentialGroup()
-                                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(txtCod)
-                                                .addComponent(lblCod, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(cmbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(fmtRegisterDate)
-                                                .addComponent(lblRegisterDate, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(pnlInputLayout.createSequentialGroup()
-                                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(lblStockQuantity)
-                                                .addComponent(txtStockQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(pnlInputLayout.createSequentialGroup()
-                                            .addComponent(lblMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(lblMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(pnlInputLayout.createSequentialGroup()
-                                            .addComponent(spiMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(spiMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGap(0, 0, Short.MAX_VALUE)))
-                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(pnlInputLayout.createSequentialGroup()
-                                    .addComponent(fmtBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(fmtSellPrice))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createSequentialGroup()
-                                    .addComponent(lblBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lblSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(71, 71, 71))
+                            .addComponent(lblProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblStockQuantity)
+                            .addComponent(txtStockQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlInputLayout.createSequentialGroup()
-                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblBarCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                            .addComponent(fmtBarCode)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createSequentialGroup()
-                                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(fmtProfitFactor, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblProfitFactor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlInputLayout.createSequentialGroup()
+                                .addComponent(spiMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(lblNCM, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
-                                    .addComponent(fmtNCM))))
-                        .addContainerGap())))
+                                .addComponent(spiMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(lblBarCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                                .addComponent(fmtBarCode)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(fmtProfitFactor, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblProfitFactor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)))
+                            .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblNCM, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(pnlInputLayout.createSequentialGroup()
+                                        .addComponent(fmtBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(fmtSellPrice))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlInputLayout.createSequentialGroup()
+                                        .addComponent(lblBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(fmtNCM, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblProductImage, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlInputLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(btnFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblFIleChoosed, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)))
+                .addGap(71, 71, 71))
         );
         pnlInputLayout.setVerticalGroup(
             pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,32 +327,41 @@ public class ProCad extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMaxStock)
-                    .addComponent(lblMinStock))
+                    .addComponent(lblMinStock)
+                    .addComponent(lblImage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spiMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spiMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBuyPrice)
-                    .addComponent(lblSellPrice))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fmtBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fmtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblProfitFactor)
-                    .addComponent(lblNCM))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fmtProfitFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fmtNCM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(lblBarCode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fmtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlInputLayout.createSequentialGroup()
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spiMinStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spiMaxStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblBuyPrice)
+                            .addComponent(lblSellPrice))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fmtBuyPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fmtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblProfitFactor)
+                            .addComponent(lblNCM))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fmtProfitFactor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fmtNCM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblBarCode)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fmtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlInputLayout.createSequentialGroup()
+                        .addComponent(lblProductImage, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnFileChooser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblFIleChoosed)))
+                .addGap(38, 38, 38))
         );
 
         btnNew.setText("Novo");
@@ -318,7 +387,12 @@ public class ProCad extends javax.swing.JFrame {
             }
         });
 
-        btnShow.setText("Imprimir");
+        btnPrint.setText("Imprimir");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("Apagar");
 
@@ -332,13 +406,13 @@ public class ProCad extends javax.swing.JFrame {
                     .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        pnlButtonLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnShow});
+        pnlButtonLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnPrint});
 
         pnlButtonLayout.setVerticalGroup(
             pnlButtonLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,13 +426,29 @@ public class ProCad extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnShow, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
 
-        pnlButtonLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnShow});
+        pnlButtonLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnChange, btnClear, btnDelete, btnExit, btnNew, btnPrint});
+
+        tblProducts.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        tblProducts.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cod", "Nome", "Status", "Estoque", "Min", "Max", "Preço Com.", "Preço Ven.", "Lucro %", "Cod Barras", "NCM", "Desc", "Imagem", "Cadastro"
+            }
+        ));
+        tblProducts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblProducts);
 
         menRegister.setText("Cadastro");
 
@@ -399,10 +489,13 @@ public class ProCad extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlInput, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlInput, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,7 +508,9 @@ public class ProCad extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(pnlButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(194, 194, 194))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getAccessibleContext().setAccessibleName("frmProCad");
@@ -428,7 +523,6 @@ public class ProCad extends javax.swing.JFrame {
         int option = JOptionPane.showConfirmDialog(this, "Você está prestes a encerrar o programa, você tem certeza ?", "ATENÇÃO", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
          
         if(option == JOptionPane.OK_OPTION) {
-            data.disconnect();
             this.dispose();
         }
     }//GEN-LAST:event_btnExitActionPerformed
@@ -453,12 +547,186 @@ public class ProCad extends javax.swing.JFrame {
     }//GEN-LAST:event_mniAboutActionPerformed
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-//        try {
-//            productcontroller.insertData(txtCod.getText());
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ProCad.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            ProductModel productobj = new ProductModel();
+            ProductController controlproduct = new ProductController();
+            String[] buyPrice;
+            String[] sellPrice;
+        
+            buyPrice = fmtBuyPrice.getText().split(" ");
+            sellPrice = fmtSellPrice.getText().split(" ");
+            
+
+            //ImageIO.write(img, "jpg", selectedFile);
+            
+            productobj.setProductStatus(cmbStatus.getSelectedItem().toString());
+            
+            productobj.setProductRegisterDate(fmtRegisterDate.getText());
+            productobj.setProductName(txtProductName.getText());
+            productobj.setProductStockQuantity(Integer.parseInt(txtStockQuantity.getText()));
+            productobj.setProductDesc(txaDescription.getText());
+            productobj.setProductMinStockQuantity((int)spiMinStock.getValue());
+            productobj.setProductMaxStockQuantity((int)spiMaxStock.getValue());
+            productobj.setProductBuyPrice(Float.parseFloat( buyPrice[0].replaceAll(",",".")));
+            productobj.setProductSellPrice(Float.parseFloat(sellPrice[0].replaceAll(",",".")));
+            productobj.setProductProfit(Float.parseFloat(fmtProfitFactor.getText().replaceAll(" %","")));
+            productobj.setProductNCM(Integer.parseInt(fmtNCM.getText()));
+            productobj.setProductBarCode(Integer.parseInt(fmtBarCode.getText())); // erro na conversão
+            productobj.setProductImage(imagePath);
+
+            controlproduct.insertProduct(productobj);
+            controlproduct.showProducts();
+            
+            procadcontroller.clearFields();
+            procadcontroller.setTodayDate(fmtRegisterDate);
+               
+            lblImage.setIcon(new ImageIcon(imagePath));
+               
+            fmtBuyPrice.setEditable(true);
+            fmtProfitFactor.setEditable(true);
+         } catch (NumberFormatException e) {
+             Logger.getLogger(ProCad.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this,"Erro: " + e,"MENSAGEM DE ERRO",JOptionPane.ERROR_MESSAGE);
+         }
     }//GEN-LAST:event_btnNewActionPerformed
+
+    private void fmtProfitFactorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fmtProfitFactorMouseClicked
+        String[] buyPrice;
+        String[] sellPrice;
+        
+        buyPrice = fmtBuyPrice.getText().split(" ");
+        sellPrice = fmtSellPrice.getText().split(" ");
+        
+        if(fmtBuyPrice.getText().replaceAll(",", ".") != "" && fmtSellPrice.getText().replaceAll(",", ".") != "") {
+            var buyPriceFormat = Float.parseFloat(buyPrice[0].replaceAll(",", ".") );
+            var sellPriceFormat = Float.parseFloat(sellPrice[0].replaceAll(",", ".") );
+            float profit;
+            
+            profit = ((sellPriceFormat - buyPriceFormat) / buyPriceFormat) * 100;
+            var format = String.format("%.02f", profit).replaceAll(",",".");
+            
+            if("NaN".equals(format)) format = "00,00";
+            System.out.println(format);
+            
+            fmtProfitFactor.setEditable(false);
+            fmtProfitFactor.setText(format.concat(" %"));
+        }
+    }//GEN-LAST:event_fmtProfitFactorMouseClicked
+
+    private void tblProductsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductsMouseClicked
+        if(evt.getClickCount() == 1){
+            btnChange.setEnabled(true);
+            btnDelete.setEnabled(true);
+            btnNew.setEnabled(false);
+
+            ImageIcon imageIcon = new ImageIcon(new ImageIcon(imagePath + lblImage.getText() + ".jpg").getImage().getScaledInstance(150,150,Image.SCALE_DEFAULT));
+            lblImage.setIcon(imageIcon);
+
+            txtCod.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 0).toString());
+            txtProductName.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 1).toString());
+            cmbStatus.setSelectedItem(tblProducts.getValueAt(tblProducts.getSelectedRow(), 2).toString());
+            txtStockQuantity.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(),3).toString());
+            spiMinStock.setValue(tblProducts.getValueAt(tblProducts.getSelectedRow(), 4));
+            spiMaxStock.setValue(tblProducts.getValueAt(tblProducts.getSelectedRow(), 5));
+            fmtBuyPrice.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 6).toString());
+            fmtSellPrice.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 7).toString());
+            fmtProfitFactor.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 8).toString());
+            fmtBarCode.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 9).toString());
+            fmtNCM.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 10).toString());
+            txaDescription.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 11).toString());
+            fmtRegisterDate.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 13).toString());
+
+            lblImage.setIcon(new ImageIcon(imagePath));
+        }
+    }//GEN-LAST:event_tblProductsMouseClicked
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+       MessageFormat header = new MessageFormat ("Impressão Padrão");     
+       MessageFormat footer = new MessageFormat ("Página {0, number, integer}");
+       try{
+            tblProducts.print(JTable.PrintMode.NORMAL,header,footer);
+       }catch(java.awt.print.PrinterException e){
+            System.err.format("Impressão não encontrada", e.getMessage());
+       }
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        try {
+            ProductController product = new ProductController();
+            ArrayList<ProductModel> list = product.showProducts();
+            DefaultTableModel dados = (DefaultTableModel)tblProducts.getModel();
+            dados.setNumRows(0);
+
+            procadcontroller.setTodayDate(fmtRegisterDate);
+
+            btnChange.setEnabled(false);
+            btnDelete.setEnabled(false);
+            btnNew.setEnabled(true);
+            for(ProductModel productobj: list){
+                dados.addRow(new Object[]{
+                    productobj.getProductCod(), productobj.getProductName(), productobj.getProductStatus(),
+                    productobj.getProductStockQuantity(), productobj.getProductMinStockQuantity(), productobj.getProductMaxStockQuantity(),
+                    productobj.getProductBuyPrice(), productobj.getProductSellPrice(), productobj.getProductProfit(),
+                    productobj.getProductBarCode(), productobj.getProductNCM(), productobj.getProductDesc(),
+                    productobj.getProductImage(), productobj.getProductRegisterDate()
+                });
+             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,"Erro: "+ e);
+        }  
+    }//GEN-LAST:event_formWindowActivated
+
+    private void fmtSellPriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fmtSellPriceFocusGained
+        String[] buyPrice;
+        String[] profitFactor;
+        
+        buyPrice = fmtBuyPrice.getText().split(" ");
+        profitFactor = fmtProfitFactor.getText().split(" ");
+            
+        var buyPriceFormat = Float.parseFloat(buyPrice[0].replaceAll(",", "."));
+        var profitFactorFormat = Float.parseFloat(profitFactor[0].replaceAll(",", "."));
+        
+        float profit = buyPriceFormat + ((profitFactorFormat / 100) * buyPriceFormat);
+        var format = String.format("%.02f", profit);
+            
+        if("NaN".equals(format)) format = "00,00";
+            
+        fmtSellPrice.setText(format.concat(" R$"));
+    }//GEN-LAST:event_fmtSellPriceFocusGained
+
+    private void fmtBuyPriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fmtBuyPriceFocusLost
+       float profit = Float.parseFloat(fmtBuyPrice.getText().replaceAll(",","."));
+        var format = String.format("%.02f", profit);
+            
+        if("NaN".equals(format)) format = "00,00";
+            
+        fmtBuyPrice.setText(format.concat(" R$"));
+    }//GEN-LAST:event_fmtBuyPriceFocusLost
+
+    private void btnFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFileChooserActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        
+        fileChooser.setDialogTitle("Escolher Imagem");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Imagens (.jpg, .jpeg, .png, .webm, .heif)","jpg", "jpeg", "png", "webm", "heif"));
+
+        int userSelection = fileChooser.showOpenDialog(this);
+
+        try {
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+
+                this.imagePath = selectedFile.getAbsolutePath();
+                lblFIleChoosed.setText(imagePath);
+
+                destination = new File("../procad/src/procad/Images/", selectedFile.getName()).toPath();
+                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Arquivo salvo em: " + destination.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao salvar o arquivo.", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnFileChooserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -491,8 +759,9 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnFileChooser;
     private javax.swing.JButton btnNew;
-    private javax.swing.JButton btnShow;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JComboBox<String> cmbStatus;
     protected javax.swing.JFormattedTextField fmtBarCode;
     protected javax.swing.JFormattedTextField fmtBuyPrice;
@@ -501,14 +770,18 @@ public class ProCad extends javax.swing.JFrame {
     protected javax.swing.JFormattedTextField fmtRegisterDate;
     protected javax.swing.JFormattedTextField fmtSellPrice;
     private javax.swing.JMenuBar jMenuBar;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JLabel lblBarCode;
     private javax.swing.JLabel lblBuyPrice;
     private javax.swing.JLabel lblCod;
     private javax.swing.JLabel lblDescription;
+    private javax.swing.JLabel lblFIleChoosed;
+    private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblMaxStock;
     private javax.swing.JLabel lblMinStock;
     private javax.swing.JLabel lblNCM;
+    private javax.swing.JLabel lblProductImage;
     private javax.swing.JLabel lblProductName;
     private javax.swing.JLabel lblProfitFactor;
     private javax.swing.JLabel lblRegisterDate;
@@ -525,6 +798,7 @@ public class ProCad extends javax.swing.JFrame {
     private javax.swing.JPanel pnlInput;
     protected javax.swing.JSpinner spiMaxStock;
     protected javax.swing.JSpinner spiMinStock;
+    private javax.swing.JTable tblProducts;
     protected javax.swing.JTextArea txaDescription;
     protected javax.swing.JTextField txtCod;
     protected javax.swing.JTextField txtProductName;
