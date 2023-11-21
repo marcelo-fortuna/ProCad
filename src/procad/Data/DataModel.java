@@ -58,10 +58,10 @@ public class DataModel {
         UIManagerConfiguration.setLanguageConfiguration();
         
         try {
-            cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + this.database, this.username, this.password);
+            cn = DriverManager.getConnection("jdbc:mysql://localhost:3307/" + this.database, this.username, this.password);
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao tentar se conectar com o banco de dados. Não é possível iniciar o programa.\nContate o desenvolvedor...", "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Erro ao tentar se conectar com o banco de dados. Não é possível iniciar o programa.\nErro: " + e, "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
         return cn;

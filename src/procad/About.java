@@ -40,7 +40,7 @@ public class About extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ProCad | Sobre");
         setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         setMaximumSize(new java.awt.Dimension(420, 380));
@@ -48,11 +48,6 @@ public class About extends javax.swing.JFrame {
         setName("frmAbout"); // NOI18N
         setPreferredSize(new java.awt.Dimension(420, 380));
         setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         lblTitle.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -160,10 +155,6 @@ public class About extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.dispose();
-    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

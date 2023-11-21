@@ -32,7 +32,7 @@ public class ProCadController {
      * Method to define the current date in a specified JFormattedTextField.
      * @param dateField 
      */
-    public void setTodayDate(JFormattedTextField dateField) {
+    public static void setTodayDate(JFormattedTextField dateField) {
        try {
             dateField.setText(Utils.getTodayDate());
        } catch (Exception e) {

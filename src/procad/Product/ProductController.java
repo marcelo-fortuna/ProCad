@@ -22,6 +22,8 @@ public class ProductController {
     private final DataModel data = new DataModel();
 
     public ProductController() {
+        this.data.setPassword("qnq32800");
+        this.data.setUsername("root");
         this.con = this.data.connect();
     }
     
@@ -71,6 +73,7 @@ public class ProductController {
             
             while(rs.next()){
                 ProductModel obj = new ProductModel();
+                obj.setProductId(rs.getInt("id"));
                 obj.setProductCod(rs.getString("cod"));
                 obj.setProductId(rs.getInt("id"));
                 obj.setProductStatus(rs.getString("status").charAt(0));                
@@ -78,9 +81,9 @@ public class ProductController {
                 obj.setProductStockQuantity(rs.getInt("qtd_estoque"));
                 obj.setProductMinStockQuantity(rs.getInt("estoque_minimo"));
                 obj.setProductMaxStockQuantity(rs.getInt("estoque_maximo"));
-                obj.setProductBuyPrice(rs.getInt("preco_compra"));                
-                obj.setProductSellPrice(rs.getInt("preco_venda"));
-                obj.setProductProfit(rs.getInt("fator"));
+                obj.setProductBuyPrice(rs.getFloat("preco_compra"));                
+                obj.setProductSellPrice(rs.getFloat("preco_venda"));
+                obj.setProductProfit(rs.getFloat("fator"));
                 obj.setProductDesc(rs.getString("descricao"));                
                 obj.setProductBarCode(rs.getString("bar_code"));         
                 obj.setProductNCM(rs.getInt("ncm"));                
@@ -100,7 +103,12 @@ public class ProductController {
 
     public void changeProduct(ProductModel product){
         try {
-            String query ="UPDATE produto SET cod=?,nome=?,descricao=?,status=?,preco_venda=?,preco_compra=?,qtd_estoque=?,estoque_minimo=?,estoque_maximo=?,fator=?,bar_code=?,ncm=?,data_cadastro=?,imagem=? where id=?;";
+            String query ="UPDATE produto SET cod=?,nome=?,descricao=?,"
+                    + "status=?,preco_venda=?,preco_compra=?,"
+                    + "qtd_estoque=?,estoque_minimo=?,estoque_maximo=?,"
+                    + "fator=?,bar_code=?,ncm=?,"
+                    + "data_cadastro=?,imagem=? "
+                    + "WHERE id=? AND cod=?;";
             
             pst = con.prepareStatement(query);
             
@@ -118,7 +126,8 @@ public class ProductController {
             pst.setInt(12,product.getProductNCM());
             pst.setString(13,product.getProductRegisterDate()); 
             pst.setString(14,product.getProductImage());
-            pst.setInt(15,product.getProductId());
+            pst.setInt(15, product.getProductId());
+            pst.setString(16,product.getProductCod());
             
             pst.execute();
             pst.close();
@@ -132,10 +141,11 @@ public class ProductController {
     
     public void deleteProduct(ProductModel product){
         try {
-            String query ="DELETE FROM produto WHERE cod=?";
+            String query ="DELETE FROM produto WHERE id=? AND cod=?";
             pst = con.prepareStatement(query);
             
-            pst.setString(1, product.getProductCod());
+            pst.setInt(1, product.getProductId());
+            pst.setString(2, product.getProductCod());
             
             pst.execute();
             pst.close();
