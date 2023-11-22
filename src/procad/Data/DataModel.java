@@ -1,85 +1,58 @@
 package procad.Data;
 
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
-import procad.swing.UIManagerConfiguration.UIManagerConfiguration;
-
 /**
  *
  * @author Marcelo
- * @since 07/11/2023
  */
 public class DataModel {
-    
-    private Connection cn;
-    
+    private String port = "3306";
     private String database = "ProCad";
     private String username = "root";
     private String password = "root";
     
+    
+    public String getPort() {
+        return this.port;
+    }
+    
+    public void setPort(String port) {
+        this.port = port;
+    }
+    
+    public String getUsername() {
+        return this.username;
+    }
+    
     /**
      * Method to set username of the connection with the database
-     * @param username
-     * @return 
+     * @param username 
      */
-    public String setUsername(String username) {
-        return this.username = username;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    public String getPassword() {
+        return this.password;
     }
  
     /**
      * Method to set password of the connection with the database
-     * @param password
-     * @return 
+     * @param password 
      */
-    public String setPassword(String password) {
-        return this.password = password;
-    }
-    
-    /**
-     * Method to set the database in connection string.
-     * @param database
-     * @return 
-     */
-    public String setDatabaseInConnectionString(String database) {
-        return this.database = database;
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public String getDatabaseInConnectionString() {
         return this.database;
     }
+    
+    /**
+     * Method to set the database in connection string.
+     * @param database 
+     */
+    public void setDatabaseInConnectionString(String database) {
+        this.database = database;
+    }
 
-    /**
-     * Method to stabilish the connection with the database.
-     * @return 
-     */
-    public Connection connect() {
-        UIManagerConfiguration.setLanguageConfiguration();
-        
-        try {
-            cn = DriverManager.getConnection("jdbc:mysql://localhost:3307/" + this.database, this.username, this.password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao tentar se conectar com o banco de dados. Não é possível iniciar o programa.\nErro: " + e, "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
-        }
-        return cn;
-    }
-    
-    /**
-     * Method to close the connection with the database.
-     * @return 
-     */
-    public Connection disconnect() {
-        UIManagerConfiguration.setLanguageConfiguration();
-        
-        try {
-            cn.close();
-        } catch (SQLException e) {
-            System.out.println("Erro ao tentar se desconectar do banco de dados.\nMensagem: " + e.getMessage());
-        }
-        return cn;
-    }
-    
 }

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import procad.Data.DataController;
 import procad.Data.DataModel;
 
 /**
@@ -18,13 +19,15 @@ public class ProductController {
     
     private PreparedStatement pst;
     private ResultSet rs;
-    private final Connection con;
+    private final Connection cn;
+    private final DataController dataControl = new DataController();
     private final DataModel data = new DataModel();
 
     public ProductController() {
-        this.data.setPassword("qnq32800");
-        this.data.setUsername("root");
-        this.con = this.data.connect();
+        data.setPort("3307");
+        data.setPassword("qnq32800");
+        data.setUsername("root");
+        this.cn = dataControl.connect();
     }
     
     public void insertProduct(ProductModel product){
@@ -35,7 +38,7 @@ public class ProductController {
                     + "data_cadastro,imagem)"
                     + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
         
-            pst = con.prepareStatement(query);
+            pst = cn.prepareStatement(query);
             
             pst.setString(1,product.getProductCod());
             pst.setString(2,String.valueOf(product.getProductStatus()));   
@@ -68,7 +71,7 @@ public class ProductController {
             
             String query = "SELECT * FROM produto";
             
-            pst = con.prepareStatement(query);
+            pst = cn.prepareStatement(query);
             rs = pst.executeQuery();
             
             while(rs.next()){
@@ -98,7 +101,6 @@ public class ProductController {
             JOptionPane.showMessageDialog(null,"Erro: " + e.getMessage());
             return null;
         }
-
     }
 
     public void changeProduct(ProductModel product){
@@ -110,7 +112,7 @@ public class ProductController {
                     + "data_cadastro=?,imagem=? "
                     + "WHERE id=? AND cod=?;";
             
-            pst = con.prepareStatement(query);
+            pst = cn.prepareStatement(query);
             
             pst.setString(1,product.getProductCod());
             pst.setString(2,product.getProductName());
@@ -142,7 +144,7 @@ public class ProductController {
     public void deleteProduct(ProductModel product){
         try {
             String query ="DELETE FROM produto WHERE id=? AND cod=?";
-            pst = con.prepareStatement(query);
+            pst = cn.prepareStatement(query);
             
             pst.setInt(1, product.getProductId());
             pst.setString(2, product.getProductCod());

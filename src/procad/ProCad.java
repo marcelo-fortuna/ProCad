@@ -261,9 +261,7 @@ public class ProCad extends javax.swing.JFrame {
                                         .addGap(79, 79, 79)
                                         .addComponent(lblImage)
                                         .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(pnlInputLayout.createSequentialGroup()
-                                        .addGap(0, 0, 0)
-                                        .addComponent(btnFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(btnFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(41, 41, 41)))
                         .addGap(71, 71, 71))
                     .addGroup(pnlInputLayout.createSequentialGroup()
@@ -348,7 +346,6 @@ public class ProCad extends javax.swing.JFrame {
                     .addComponent(lblProductImage, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(pnlInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlInputLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addComponent(lblBarCode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fmtBarCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -562,6 +559,9 @@ public class ProCad extends javax.swing.JFrame {
         
         if(option == JOptionPane.OK_OPTION) {
             procadcontroller.clearFields();
+            btnNew.setEnabled(true);
+            btnChange.setEnabled(false);
+            btnDelete.setEnabled(false);
             lblProductImage.setIcon(new ImageIcon(""));
             ProCadController.setTodayDate(fmtRegisterDate);
         }
@@ -584,37 +584,41 @@ public class ProCad extends javax.swing.JFrame {
         String[] profitFactor = fmtProfitFactor.getText().split(" ");
         Path destination;
 
-        productobj.setProductCod(txtCod.getText());
-        productobj.setProductStatus(cmbStatus.getSelectedItem().toString().charAt(0));
-        productobj.setProductRegisterDate(fmtRegisterDate.getText());
-        productobj.setProductName(txtProductName.getText());
-        productobj.setProductStockQuantity(Integer.parseInt(txtStockQuantity.getText()));
-        productobj.setProductDesc(txaDescription.getText());
-        productobj.setProductMinStockQuantity((int) spiMinStock.getValue());
-        productobj.setProductMaxStockQuantity((int) spiMaxStock.getValue());
-        productobj.setProductBuyPrice(Float.parseFloat(buyPrice[0].replaceAll(",", ".")));
-        productobj.setProductSellPrice(Float.parseFloat(sellPrice[0].replaceAll(",", ".")));
-        productobj.setProductProfit(Float.parseFloat(profitFactor[0].replaceAll(",", ".")));
-        productobj.setProductNCM(Integer.parseInt(fmtNCM.getText()));
-        productobj.setProductBarCode(fmtBarCode.getText());
+        if((txtCod.getText().equals("")) && (txaDescription.getText().equals("")) && (txtProductName.getText().equals("")) && (txtStockQuantity.getText().equals("")) && (spiMaxStock.getValue().equals(0)) && (lblProductImage.getText().equals(""))) {
+            JOptionPane.showMessageDialog(this, "Todos os campos devem ser preenchidos", "AVISO!", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            productobj.setProductCod(txtCod.getText());
+            productobj.setProductStatus(cmbStatus.getSelectedItem().toString().charAt(0));
+            productobj.setProductRegisterDate(fmtRegisterDate.getText());
+            productobj.setProductName(txtProductName.getText());
+            productobj.setProductStockQuantity(Integer.parseInt(txtStockQuantity.getText()));
+            productobj.setProductDesc(txaDescription.getText());
+            productobj.setProductMinStockQuantity((int) spiMinStock.getValue());
+            productobj.setProductMaxStockQuantity((int) spiMaxStock.getValue());
+            productobj.setProductBuyPrice(Float.parseFloat(buyPrice[0].replaceAll(",", ".")));
+            productobj.setProductSellPrice(Float.parseFloat(sellPrice[0].replaceAll(",", ".")));
+            productobj.setProductProfit(Float.parseFloat(profitFactor[0].replaceAll(",", ".")));
+            productobj.setProductNCM(Integer.parseInt(fmtNCM.getText()));
+            productobj.setProductBarCode(fmtBarCode.getText());
 
-        if (imagePath != null && !imagePath.isEmpty()) {
-            File selectedFile = new File(imagePath);
-            destination = new File("../procad/src/procad/Images/", selectedFile.getName()).toPath();
-            Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+            if (imagePath != null && !imagePath.isEmpty()) {
+                File selectedFile = new File(imagePath);
+                destination = new File("../procad/src/procad/Images/", selectedFile.getName().replaceAll(" ", "-")).toPath();
+                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
 
-            productobj.setProductImage(destination.toString());
+                productobj.setProductImage(destination.toString());
+            }
+
+            controlproduct.insertProduct(productobj);
+            controlproduct.showProducts();
+
+            procadcontroller.clearFields();
+            ProCadController.setTodayDate(fmtRegisterDate);
+            lblProductImage.setIcon(new ImageIcon(""));
+
+            fmtBuyPrice.setEditable(true);
+            fmtProfitFactor.setEditable(true);
         }
-
-        controlproduct.insertProduct(productobj);
-        controlproduct.showProducts();
-
-        procadcontroller.clearFields();
-        ProCadController.setTodayDate(fmtRegisterDate);
-        lblProductImage.setIcon(new ImageIcon("caminho_predefinido/default_image.jpg"));
-
-        fmtBuyPrice.setEditable(true);
-        fmtProfitFactor.setEditable(true);
     } catch (IOException | NumberFormatException e) {
         Logger.getLogger(ProCad.class.getName()).log(Level.SEVERE, null, e);
         JOptionPane.showMessageDialog(this, "Erro: " + e, "MENSAGEM DE ERRO", JOptionPane.ERROR_MESSAGE);
@@ -709,7 +713,8 @@ public class ProCad extends javax.swing.JFrame {
                 fmtProfitFactor.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 9).toString());
                 fmtBarCode.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 10).toString());
                 fmtNCM.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 11).toString());
-                txaDescription.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 12).toString());;
+                txaDescription.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 12).toString());
+                lblProductImage.setIcon(new ImageIcon(""));
                 fmtRegisterDate.setText(tblProducts.getValueAt(tblProducts.getSelectedRow(), 14).toString());
             }
         }
@@ -798,7 +803,6 @@ public class ProCad extends javax.swing.JFrame {
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
                 this.imagePath = selectedFile.getAbsolutePath();
-                System.out.println("Caminho da imagem: " + this.imagePath);
 
                 updateProductImage();
             } else if (userSelection == JFileChooser.CANCEL_OPTION || userSelection == JFileChooser.ERROR_OPTION) {
@@ -849,12 +853,17 @@ public class ProCad extends javax.swing.JFrame {
         String[] buyPrice = fmtBuyPrice.getText().split(" ");
         String[] sellPrice = fmtSellPrice.getText().split(" ");
         String[] profitFactor = fmtProfitFactor.getText().split(" ");;
-
+        Path destination;
+        
         try {
                 if(!txtCod.getText().equals("")) {
                     ImageIcon imageIcon = new ImageIcon(this.imagePath);
                     Image scaledImage = imageIcon.getImage().getScaledInstance(154, 164, Image.SCALE_SMOOTH);
                     ImageIcon resizedImage = new ImageIcon(scaledImage);
+                    
+                    File selectedFile = new File(imagePath);
+                    destination = new File("../procad/src/procad/Images/", selectedFile.getName().replaceAll(" ", "-")).toPath();
+                    Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
                     
                     productobj.setProductId(Integer.parseInt(lblProductId.getText()));
                     productobj.setProductCod(txtCod.getText());
@@ -870,13 +879,13 @@ public class ProCad extends javax.swing.JFrame {
                     productobj.setProductProfit(Float.parseFloat(profitFactor[0].replaceAll(",",".")));
                     productobj.setProductNCM(Integer.parseInt(fmtNCM.getText()));
                     productobj.setProductBarCode(fmtBarCode.getText());
-                    productobj.setProductImage(imagePath);
+                    productobj.setProductImage(destination.toString());
 
                     controlproduct.changeProduct(productobj);
                     controlproduct.showProducts();
                     
-                    lblProductImage.setIcon(new ImageIcon(""));
                     procadcontroller.clearFields();
+                    lblProductImage.setIcon(new ImageIcon(""));
                     ProCadController.setTodayDate(fmtRegisterDate);
 
                     btnChange.setEnabled(false);
@@ -888,7 +897,7 @@ public class ProCad extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null,"Preencha o campo Código!");
             }
-        } catch (HeadlessException | NumberFormatException e) {
+        } catch (IOException | HeadlessException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null,"Erro: " + e);
         }
     }//GEN-LAST:event_btnChangeActionPerformed
